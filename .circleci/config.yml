@@ -1,0 +1,39 @@
+version: 2.1
+
+executors:
+  normal_container:
+    docker:
+      - image: cimg/node:lts
+
+jobs:
+  unit-test:
+    executor: normal_container
+    steps:
+      - checkout
+      - run:
+          name: unit-test
+          command: |
+            echo "run unit-test"
+            ls -l
+
+  deploy:
+    executor: normal_container
+    steps:
+      - run:
+          name: checkout with sparse-checkout
+          command: |
+            echo "run checkout with sparse-checkout"
+            ls -l
+            git clone $CIRCLE_REPOSITORY_URL
+            ls -l
+      - run:
+          name: deploy
+          command: |
+            echo "run deploy"
+            ls -l
+
+workflows:
+  release:
+    jobs:
+      - unit-test
+      - deploy
